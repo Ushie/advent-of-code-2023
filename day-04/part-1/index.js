@@ -13,11 +13,7 @@ cards.forEach((card) => {
     const winningNumbers = [...numbers[0].match(isNumber)];
     [...numbers[1].match(isNumber)].forEach((number) => {
         if (winningNumbers.includes(number)) {
-            if (points == 0) {
-                points += 1;
-            } else {
-                points *= 2
-            }
+            points == 0 ? points += 1 : points *= 2;
         }
     })
     totalPoints += points
