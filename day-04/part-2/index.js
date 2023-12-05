@@ -7,38 +7,25 @@ const isNumber = /\d+/g;
 
 let totalCards = 0;
 
-const copies = new Map()
+const copies = new Map();
 
-for (let i = 0; i < cards.length; i++) {
-    copies.set(i + 1, 1)
-}
+cards.forEach((_, index) => copies.set(index + 1, 1));
 
 cards.forEach((card) => {
-    let amountOfWins = 0;
-    const [cardId, numbersString] = card.split(":");
-    const [winningNumbersStr, cardNumbersStr] = numbersString.split("|");
+    const cardDetails = card.split(":");
+    const cardId = Number(cardDetails[0].match(isNumber));
+    const numbers = cardDetails[1].split("|");
+    const winningNumbers = [...numbers[0].match(isNumber)];
+    const cardNumbers = [...numbers[1].match(isNumber)];
 
-    const cardDetails = {
-        cardId: Number(cardId.match(isNumber)),
-        numbers: {
-            winningNumbers: winningNumbersStr.match(isNumber),
-            cardNumbers: cardNumbersStr.match(isNumber)
-        }
-    };
-    cardDetails.numbers.cardNumbers.forEach((number) => {
-        if (cardDetails.numbers.winningNumbers.includes(number)) {
-            amountOfWins += 1
-        }
-    });
+    let amountOfWins = cardNumbers.reduce((wins, number) => wins + winningNumbers.includes(number), 0);
 
-    const amountOfCopies = copies.get(cardDetails.cardId);
+    const amountOfCopies = copies.get(cardId);
     totalCards += amountOfCopies;
-
     for (let i = 1; i <= amountOfWins; i++) {
-        const targetId = cardDetails.cardId + i;
-        copies.set(targetId, copies.get(targetId) + (1 * amountOfCopies))
-    }
-})
-
+        const targetId = cardId + i;
+        copies.set(targetId, copies.get(targetId) + amountOfCopies)
+    };
+});
 
 console.log(totalCards);
